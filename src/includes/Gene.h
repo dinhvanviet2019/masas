@@ -19,7 +19,7 @@ class Gene {
 public:
     Gene(Graph * graph);
     ~Gene();
-    void construct();
+    void construct(bool inMating, Gene* bestKnown);
     void C_LS();
     void copyTo(Gene* cell);
     void setData(DSSet* set, Owner* owner, TmpInfo* tmpInfo);
@@ -52,10 +52,6 @@ private:
     // ds info
     DSSet* set;
     // ownner info
-    Owner* owner;
-    // temp info
-    TmpInfo* tmpInfo;
-    // con lon
-    Gene * CSlb;   
+    Owner* owner;    
 };
 #endif

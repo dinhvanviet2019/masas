@@ -35,7 +35,7 @@ double Gene::getValue() {
 }
 
 // change to GRASP with initialize
-void Gene::construct() {
+void Gene::construct(bool inMating, Gene* bestKnown) {
     srand(time(NULL));   
     int pmin, pmax;
     int * RCL;
@@ -48,7 +48,9 @@ void Gene::construct() {
     // initialize    
     nRCL = 0;
     for (int i = 0; i < n; i++) {
-        L[i] = i;
+        if (owner->nOwner[i] == 0) {
+            L[i] = i;
+        }
     }     
     // GRASP
     nL = n;
@@ -81,6 +83,9 @@ void Gene::construct() {
         // choose vertex
         int randID = rand() % nRCL;
         int u = RCL[randID];
+        if (set->value  + G->getWeight(u) >= bestKnown->getValue()) {
+            return;
+        }
         set->addMainVertex(u);
         owner->addMainVertex(u);                          
         // update L

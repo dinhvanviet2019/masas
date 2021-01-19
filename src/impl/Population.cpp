@@ -9,11 +9,10 @@
  * */
 #include "Population.h"
 #include <cstdlib>
-#include <time>
+#include <ctime>
 
-Population::Population(Graph* graph, int nGens) {
-    this->graph = graph;
-    this->nGens = nGens;    
+Population::Population(Graph* graph) {
+    this->graph = graph;    
     pops = new Gene*[nGens];    
     for (int i = 0; i < nGens; i++) {
         pops[i] = new Gene(graph);
@@ -47,14 +46,14 @@ void Population::initPopulation() {
     }
 }
 
-void Population::pdo(int i, int j) {
+void Population::pdo(Gene* x, Gene* y) {
     srand(time(NULL));
     child->clearInfo();
     for (int i = 0; i < graph->getGraphSize(); i++) {
         if (pops[i]->contains(i) && pops[i]->contains(j) && rand() % 100 < beta1) {
             child->addMainVertex(i);
         } else {
-            if (pops[i]->construct(i) || pops[i]->contains(j)) {
+            if (x->contains(i) || y->contains(j)) {
                 if (!child->isCovered(i)) {
                     if (rand() % 100 < (100 - beta1)) {
                         child->addMainVertex(i);
@@ -64,7 +63,7 @@ void Population::pdo(int i, int j) {
                 if (rand() % 100 < beta2) {
                     int* adjPtn = graph->getADJPnt(i);
                     for (int j = 0; j < graph->getADJListSize(i); j++) {
-                        if (child.contains(*adjPtn)) {
+                        if (child->contains(*adjPtn)) {
                             child->removeMainVertex(*adjPtn);
                         }
                         adjPtn++;
@@ -74,6 +73,7 @@ void Population::pdo(int i, int j) {
             }
         }
     }
+    child->construct();
 
 }
 
@@ -82,7 +82,25 @@ void Population::poolUpdate(Gene* nextGen) {
 }
 
 void Population::run() {
-    
+    int i = rand() % N_GENS;
+    int j = rand() % N_GENS;
+    Gene* x = pops[i];
+    Gene* y = pops[j];
+    pdo(x, y);    
+    bool is_not_terminated = true;    
+    while (is_not_terminated) {
+        child->C_LS(CSlb);
+    }
+    if (CSlb->getValue() < bestKnown->getValue()) {
+        CSlb->copyTo(bestKnown);
+    }
+    poolUpdate(CSlb);
+        if (CSlb == NULL) {
+            pdo(x, y)
+        } else {
+            pdo(x, CSlb);
+        }
+    }
 }
 
 // a communication

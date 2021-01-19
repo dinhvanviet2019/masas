@@ -16,17 +16,18 @@
 
 class Population {
 public:
-    Population(Graph* graph, int nGens);
+    Population(Graph* graph);
     ~Population();
     void initPopulation();    
-    void pdo(int i, int j);
+    void pdo(Gene* x, Gene* y);
     void poolUpdate(Gene * nextGen);
     void run();
+    Gene* getGene(int i);    
 private:
+    const int nGens = 12;
     const int beta1 = 80;
     const int beta2 = 5;
 
-    int nGens;
     Graph* graph;
     Gene ** pops;
     TmpInfo * tmpInfo;
