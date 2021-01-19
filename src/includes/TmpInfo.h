@@ -1,8 +1,7 @@
 #ifndef TMPINFO_H
 #define TMPINFO_H
 #include "Graph.h"
-#include "Owner.h"
-#include "DSset.h"
+#include "GeneInfo.h"
 
 typedef struct TmpInfo {
     TmpInfo(Graph* G) {
@@ -63,7 +62,9 @@ typedef struct TmpInfo {
         conf[u] = false;
     }
 
-    void initSC(DSSet* set, Owner* owner) {
+    void initSC(GeneInfo* geneInfo) {
+        DSSet* set = geneInfo->getDSSet();
+        Owner* owner = geneInfo->getOwner();
         n = _G->getGraphSize();
         int sumTmp;
         for (int u = 0; u < n; u++) {
@@ -82,7 +83,9 @@ typedef struct TmpInfo {
         }
     }
     
-    void updateSC(int u, DSSet* set, Owner* owner) {
+    void updateSC(int u, GeneInfo* geneInfo) {
+        DSSet* set = geneInfo->getDSSet();
+        Owner* owner = geneInfo->getOwner();
         int* adjPtn = _G->getADJPnt(u);
         for (int i = 0; i < _G->getADJListSize(u); i++) {
             int* adjUPtn = _G->getADJPnt(*adjPtn);            
@@ -113,35 +116,39 @@ typedef struct TmpInfo {
         }
     }
 
-    void updateSCFromList(DSSet* set, Owner* owner) {
-         for (int li = 0; li < scLen; li++) {
-             int i = scUpdatingList[i];
-            if (set->set[i]) {
+    void updateSCFromList(GeneInfo* geneInfo) {
+        DSSet* set = geneInfo->getDSSet();
+        Owner* owner = geneInfo->getOwner();
+        for (int li = 0; li < scLen; li++) {
+            int i = scUpdatingList[i];
+        if (set->set[i]) {
+            int* adjPtn = _G->getADJPnt(i);
+            int tmpK = 0;
+            for (int k = 0; k < _G->getADJListSize(i); k++) {
+                if (owner->nOwner[*adjPtn] == 1) {
+                    tmpK += pp[*adjPtn];
+                }                    
+                adjPtn++;
+            }
+            sc[i] = -1/_G->getWeight(i) * tmpK;
+        } else {
+            if (owner->nOwner[i] == 0) {
                 int* adjPtn = _G->getADJPnt(i);
                 int tmpK = 0;
                 for (int k = 0; k < _G->getADJListSize(i); k++) {
-                    if (owner->nOwner[*adjPtn] == 1) {
+                    if (owner->nOwner[*adjPtn] == 0) {
                         tmpK += pp[*adjPtn];
-                    }                    
-                    adjPtn++;
+                    }                        
                 }
-                sc[i] = -1/_G->getWeight(i) * tmpK;
-            } else {
-                if (owner->nOwner[i] == 0) {
-                    int* adjPtn = _G->getADJPnt(i);
-                    int tmpK = 0;
-                    for (int k = 0; k < _G->getADJListSize(i); k++) {
-                        if (owner->nOwner[*adjPtn] == 0) {
-                            tmpK += pp[*adjPtn];
-                        }                        
-                    }
-                    sc[i] = 1/_G->getWeight(i) * tmpK; 
-                }
+                sc[i] = 1/_G->getWeight(i) * tmpK; 
             }
+        }
         }
     }
 
-    void reCalculateSC(DSSet* set, Owner* owner) {
+    void reCalculateSC(GeneInfo* geneInfo) {
+        DSSet* set = geneInfo->getDSSet();
+        Owner* owner = geneInfo->getOwner();
         for (int i = 0; i < _G->getGraphSize(); i++) {
             if (set->set[i]) {
                 int* adjPtn = _G->getADJPnt(i);
@@ -201,7 +208,9 @@ typedef struct TmpInfo {
         return v;
     }
 
-    int findNextVertexToADD(DSSet* set, Owner* owner){
+    int findNextVertexToADD(GeneInfo* geneInfo){
+        DSSet* set = geneInfo->getDSSet();
+        Owner* owner = geneInfo->getOwner();
         clearL();
         for (int u = 0; u < n; u++) {
             if (!set->set[u] && conf[u] && owner->nOwner[u] == 0) {

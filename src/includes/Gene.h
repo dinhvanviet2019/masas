@@ -18,31 +18,28 @@ class Gene {
 public:
     Gene(Graph * graph);
     ~Gene();
-    void construct(bool inMating, Gene* bestKnown);
-    void C_LS();
-    void copyTo(Gene* cell);
-    void setData(DSSet* set, Owner* owner, TmpInfo* tmpInfo);
-    void setTmpInfo(TmpInfo* tmpInfo);
-    double getValue();
-    
-    void setCLSB(Gene* CLsb) {
-        this->CSlb = CLsb;
+    void construct(TmpInfo* tmpInfo, bool inMating, Gene* bestKnown);
+    void C_LS(TmpInfo* tmpInfo, Gene* CSlb);
+
+    void copy(Gene* cell) {
+        geneInfo->copy(cell->getGenInfo());
     }
+    
+    GeneInfo* getGenInfo() {
+        return geneInfo;
+    }
+    
+    double getValue() {
+        return geneInfo->getDSSet()->value;
+    }
+
     bool contains(int v) {
-        return owner->nOwner[v];
+        return geneInfo->getOwner()->nOwner[v];
     }
     bool isCovered(int v) {
-        // need to implement
+        return geneInfo->getDSSet()->set[v];
     }
-    void clearInfo() {
-        // need to implement
-    }
-    void addMainVertex(int v) {
-        // need to implement
-    }
-    void removeMainVertex(int v){
-        // need to implement
-    }
+
 private:
     const double alpha = 0.8;
     const int noimpro_iter = 50000;

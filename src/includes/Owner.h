@@ -45,11 +45,12 @@ typedef struct Owner {
         }
     }
 
-    void setData(Owner * owner) {
+    // copy its owner to other
+    void copy(Owner * owner) {
         nCover = owner->nCover;
-        memcpy(nOwner, owner->nOwner,n * sizeof(int));
+        memcpy(nOwner, owner->nOwner,  n * sizeof(int));
         numUVs = owner->numUVs;
-        memcpy(uVers, owner->uVers,n * sizeof(int));
+        memcpy(uVers, owner->uVers, n * sizeof(int));
     }
 
     void init() {

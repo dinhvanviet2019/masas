@@ -6,36 +6,15 @@
 Gene::Gene(Graph * graph) {
     G = graph;
     n = G->getGraphSize();
-    set = new DSSet(G);
-    owner = new Owner(G);
-    tmpInfo = new TmpInfo(G);
+    geneInfo = new GeneInfo(graph);
 }
 
 Gene::~Gene() {
-   delete set;
-   delete owner;
-}
-
-void Gene::copyTo(Gene* cell) {    
-    cell->setData(set, owner, tmpInfo);    
-}
-
-void Gene::setData(DSSet* set, Owner * owner, TmpInfo* tmpInfo) {
-    this->set->setData(set);
-    this->owner->setData(owner);
-    this->tmpInfo = tmpInfo;
-}
-
-void Gene::setTmpInfo(TmpInfo* tmpInfo) {
-    this->tmpInfo = tmpInfo;
-}
-
-double Gene::getValue() {
-    return set->value;
+   delete geneInfo;
 }
 
 // change to GRASP with initialize
-void Gene::construct(bool inMating, Gene* bestKnown) {
+void Gene::construct(TmpInfo* tmpInfo, bool inMating, Gene* bestKnown) {
     srand(time(NULL));   
     int pmin, pmax;
     int * RCL;
@@ -47,6 +26,8 @@ void Gene::construct(bool inMating, Gene* bestKnown) {
     L = new int[n];    
     // initialize    
     nRCL = 0;
+    DSSet* set = geneInfo->getDSSet();
+    Owner* owner = geneInfo->getOwner();
     for (int i = 0; i < n; i++) {
         if (owner->nOwner[i] == 0) {
             L[i] = i;
@@ -101,18 +82,20 @@ void Gene::construct(bool inMating, Gene* bestKnown) {
     delete[] p;
 }
 
-void Gene::C_LS() {
+void Gene::C_LS(TmpInfo* tmpInfo, Gene* CSlb) {
     srand(time(NULL));
     // init
-    CSlb->setData(set, owner);
+    CSlb->copy(this);
     tmpInfo->init();        
-    tmpInfo->initSC(set, owner);
+    tmpInfo->initSC(geneInfo);
     tmpInfo->clearL();
     int iter = 0;
+    DSSet* set = geneInfo->getDSSet();
+    Owner* owner = geneInfo->getOwner();
     while (iter < noimpro_iter) {
         if (owner->nCover == n) {
             if (set->value < CSlb->getValue()) {
-                CSlb->setData(set, owner);
+                CSlb->copy(this);
                 iter = 0;
             }                        
             int v = tmpInfo->findNextVertexToRemove(set);            
@@ -120,7 +103,7 @@ void Gene::C_LS() {
             owner->removeMainVertex(v);
             tmpInfo->updateConfWhenRemoveVertex(v);
             tmpInfo->create_N2_SCUpdatingList(v);
-            tmpInfo->updateSCFromList(set, owner);
+            tmpInfo->updateSCFromList(geneInfo);
             continue;
         }
         int v = tmpInfo->findNextVertexToRemove(set);
@@ -128,23 +111,23 @@ void Gene::C_LS() {
         owner->removeMainVertex(v);
         tmpInfo->updateConfWhenRemoveVertex(v);
         tmpInfo->create_N2_SCUpdatingList(v);
-        tmpInfo->updateSCFromList(set, owner);
+        tmpInfo->updateSCFromList(geneInfo);
         tmpInfo->clearTabu();
         //v : = a vertex in CS with the highest value sc ( v ) and v ∈
         // tabu_list, breaking ties in the oldest one;
         while (owner->nCover < n) {
-            int maxc = tmpInfo->findNextVertexToADD(set, owner);
+            int maxc = tmpInfo->findNextVertexToADD(geneInfo);
             if (set->value + G->getWeight(maxc) >= CSlb->getValue()) {
                 break;
             }
             set->addMainVertex(maxc);
             owner->addMainVertex(maxc);
             tmpInfo->updateConfWhenAddMainVertex(maxc);
-            tmpInfo->updateSC(v, set, owner);
+            tmpInfo->updateSC(v, geneInfo);
             tmpInfo->addToTabuList(maxc);            
             tmpInfo->updatePP(owner);
             tmpInfo->create_SCUpatingtList_From_UVs(owner);
-            tmpInfo->updateSCFromList(set, owner);        
+            tmpInfo->updateSCFromList(geneInfo);        
         }
         iter ++;
     }

@@ -21,8 +21,17 @@ int main() {
     genInfo->addMainVertex(4);
     genInfo->addMainVertex(8);
     genInfo->addMainVertex(16);
+    
     for (int i = 0; i < graph->getGraphSize(); i++) {
-        printf("%d ", owner->nOwner[i]);
+        printf("%d ", set->set[i]);
+    }
+    printf("\n");
+    GeneInfo* genInfoClone = new GeneInfo(graph);
+    genInfoClone->copy(genInfo);
+    DSSet * setClone = genInfoClone->getDSSet();
+    Owner* ownerClone = genInfoClone->getOwner();
+    for (int i = 0; i < graph->getGraphSize(); i++) {
+        printf("%d ", setClone->set[i]);
     }
     printf("\n");
     delete graph;    

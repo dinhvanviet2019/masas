@@ -23,9 +23,9 @@ typedef struct DSSet{
         set[u] = false;
         value -= _G->getWeight(u);
     }
-    void setData(DSSet * dsset) {
-        memcpy(this->set, dsset->set, n * sizeof(bool));
-        value = this->value;
+    void copy(DSSet * dsset) {
+        memcpy(set, dsset->set, n * sizeof(bool));
+        value = dsset->value;
     }    
     Graph * _G;
     int n;
