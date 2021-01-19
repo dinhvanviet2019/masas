@@ -55,8 +55,8 @@ double& Graph::getWeight(const int& vertex) {
     return weights[vertex];
 }
 
-void Graph::init() {
-    adjVertexPtr = new int[2 * m + n];
+void Graph::init() {    
+    adjVertexPtr = new int[2 * m + n];    
     memset(adjVertexPtr, 0, (2 * m + n) * sizeof(int));
     adjListSize = new int[n];
     memset(adjListSize, 0, n * sizeof(int));
@@ -68,7 +68,7 @@ void Graph::init() {
 
 void Graph::calWeights() {
     for (int i = 0; i < n; i++) {
-        weights[i] = (i % 200) + 1;
+        weights[i] = ((i+1) % 200) + 1;
     }
 }
 

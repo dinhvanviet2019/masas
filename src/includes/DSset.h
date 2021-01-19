@@ -1,10 +1,14 @@
 #ifndef DSSET_H
 #define DSSET_H
 #include "Graph.h"
+#include <cstring>
+
 typedef struct DSSet{
     DSSet(Graph * G) {
         _G = G;
-        set = new bool[_G->getGraphSize()];
+        n = _G->getGraphSize();
+        set = new bool[n];
+        memset(set, 0, n * sizeof(bool));
         value = 0;
     }
     ~DSSet() {
@@ -16,14 +20,15 @@ typedef struct DSSet{
         value += _G->getWeight(u);
     }
     void removeMainVertex(int u) {
-        set[u] = true;
+        set[u] = false;
         value -= _G->getWeight(u);
     }
     void setData(DSSet * dsset) {
-        memcpy(this->set, dsset->set, _G->getGraphSize() * sizeof(bool));
+        memcpy(this->set, dsset->set, n * sizeof(bool));
         value = this->value;
-    }
+    }    
     Graph * _G;
+    int n;
     bool * set;
     double value;    
 };

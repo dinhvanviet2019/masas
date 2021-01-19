@@ -11,8 +11,7 @@
 #ifndef GENE_H
 #define GENE_H
 #include "Graph.h"
-#include "DSset.h"
-#include "Owner.h"
+#include "GeneInfo.h"
 #include "TmpInfo.h"
 
 class Gene {
@@ -25,6 +24,7 @@ public:
     void setData(DSSet* set, Owner* owner, TmpInfo* tmpInfo);
     void setTmpInfo(TmpInfo* tmpInfo);
     double getValue();
+    
     void setCLSB(Gene* CLsb) {
         this->CSlb = CLsb;
     }
@@ -50,8 +50,6 @@ private:
     int n;
     Graph * G;
     // ds info
-    DSSet* set;
-    // ownner info
-    Owner* owner;    
+    GeneInfo* geneInfo;    
 };
 #endif

@@ -1,21 +1,30 @@
 CC := g++
-INCLUDE_DIR := ./includes
 SRC_DIR := ./impl
-OBJ_DIR := ./build/obj
-BIN_DIR := ./build/bin
-SRC_FILES := $(wildcard ${INCLUDE_DIR}/*.cpp)
-OBJ_FILES := ${OBJ_DIR}/$(patsubst ${SRC_DIR}/%.cpp,${OBJ_DIR}/%.o,${SRC_FILES})
-CCFLAGS := 
-LDFLAGS :=
-ICFLAGS := -I $(INCLUDE_DIR)
-TARGET := ${BIN_DIR}/masas
+INC_DIR := ./includes
+OBJ_DIR := ./build
+BIN_DIR := ./build
 
+SRCS := $(SRC_DIR)/Graph.cpp $(SRC_DIR)/SmallGraph.cpp $(SRC_DIR)/MassiveGraph.cpp $(SRC_DIR)/GraphFactory.cpp $(SRC_DIR)/main.cpp
+BINS := $(BIN_DIR)/main
+
+.PHONY: build compile clean test
+
+all: clean build compile
 build:
 	mkdir -p ${OBJ_DIR}
 	mkdir -p ${BIN_DIR}
 
-$(OBJ_FILES): 
+compile: $(BINS)
+test: $(BINS)
+	$^
 
-${TARGET}: $(OBJ_FILES)
-	CC $(LDFLAGS) -o $@ $^ $(CCFLAGS) $(ICFLAGS)
-	chmod +x $@
+
+$(BINS): $(SRCS)
+	$(CC) -o $@ $^ -I $(INC_DIR)
+
+clean:
+	rm -rf ${OBJ_DIR}
+	rm -rf ${BIN_DIR}
+
+
+

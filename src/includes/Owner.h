@@ -5,19 +5,23 @@
 typedef struct Owner {
     Owner(Graph* G) {
         _G = G;
+        n = G->getGraphSize();
         nCover = 0;
         nOwner = new int[_G->getGraphSize()];
         uVers = new int[_G->getGraphSize()];
         pos = new int[_G->getGraphSize()];
-        numUVs = 0;
+        numUVs = n;
+        init();
     }
 
     ~Owner() {
         _G = nullptr;
         delete[] nOwner;
+        delete[] uVers;
+        delete[] pos;
     }
 
-    void addMainVertex(int u) {
+    void addMainVertex(int u) {       
         int* adjPnt = _G->getADJPnt(u);
         for (int i = 0; i < _G->getADJListSize(u); i++) {
             if (nOwner[*adjPnt] == 0) {
@@ -43,15 +47,22 @@ typedef struct Owner {
 
     void setData(Owner * owner) {
         nCover = owner->nCover;
-        memcpy(nOwner, owner->nOwner, _G->getGraphSize());
+        memcpy(nOwner, owner->nOwner,n * sizeof(int));
         numUVs = owner->numUVs;
-        memcpy(uVers, owner->uVers, _G->getGraphSize());
+        memcpy(uVers, owner->uVers,n * sizeof(int));
     }
 
-    void resetUV() {
-        numUVs = 0;
-        for (int i = 0; i < _G->getGraphSize(); i++) {
-            pos[i] = -1;
+    void init() {
+        // Owners
+        nCover = 0;
+        for (int i = 0; i < n; i++) {
+            nOwner[i] = 0;
+        }
+        // reset uVers        
+        numUVs = n;
+        for (int i = 0; i < n; i++) {
+            uVers[i] = i;
+            pos[i] = i;
         }
     }
 
@@ -64,7 +75,7 @@ typedef struct Owner {
     }
 
     void removeFromUV(int u) {
-        if (pos[u] > 0) {
+        if (pos[u] >= 0) {
             int posID = pos[u];
             int lastInstance = uVers[numUVs - 1];
             uVers[posID] = lastInstance;
@@ -91,6 +102,7 @@ typedef struct Owner {
     int* uVers;
     int numUVs;
     int* pos;
-    Graph * _G;        
+    Graph * _G;
+    int n;
 };
 #endif

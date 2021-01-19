@@ -13,7 +13,6 @@
 class SmallGraph : public Graph {
 public:
     SmallGraph(char * file);
-    ~SmallGraph();    
 protected:    
     void loadData();    
 };

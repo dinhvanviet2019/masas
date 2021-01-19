@@ -10,10 +10,10 @@
 #include "SmallGraph.h"
 #include "MassiveGraph.h"
 
-Graph* createSmallGraph(char * file) {
+Graph* GraphFactory::createSmallGraph(char * file) {
     return new SmallGraph(file);
 }
 
-Graph* createMassiveGraph(char * file) {
+Graph* GraphFactory::createMassiveGraph(char * file) {
     return new MassiveGraph(file);
 }
