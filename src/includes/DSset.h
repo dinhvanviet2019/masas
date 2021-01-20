@@ -2,6 +2,7 @@
 #define DSSET_H
 #include "Graph.h"
 #include <cstring>
+#include <cstdio>
 
 typedef struct DSSet{
     DSSet(Graph * G) {
@@ -26,7 +27,18 @@ typedef struct DSSet{
     void copy(DSSet * dsset) {
         memcpy(set, dsset->set, n * sizeof(bool));
         value = dsset->value;
-    }    
+    }
+
+    void printInfo() {
+        printf("Value = %0.2f\n", value);
+        printf("Set List: ");
+        for (int i = 0; i < n; i++) {
+            if (set[i]) {
+                printf("%d ", i);
+            }
+        }
+        printf("\n");
+    }
     Graph * _G;
     int n;
     bool * set;

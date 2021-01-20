@@ -4,7 +4,7 @@ INC_DIR := ./includes
 OBJ_DIR := ./build
 BIN_DIR := ./build
 
-SRCS := $(SRC_DIR)/Graph.cpp $(SRC_DIR)/SmallGraph.cpp $(SRC_DIR)/MassiveGraph.cpp $(SRC_DIR)/GraphFactory.cpp $(SRC_DIR)/main.cpp
+SRCS := $(SRC_DIR)/Graph.cpp $(SRC_DIR)/SmallGraph.cpp $(SRC_DIR)/MassiveGraph.cpp $(SRC_DIR)/GraphFactory.cpp $(SRC_DIR)/Gene.cpp $(SRC_DIR)/main.cpp
 BINS := $(BIN_DIR)/main
 
 .PHONY: build compile clean test
@@ -23,6 +23,7 @@ $(BINS): $(SRCS)
 	$(CC) -o $@ $^ -I $(INC_DIR)
 
 clean:
+	reset
 	rm -rf ${OBJ_DIR}
 	rm -rf ${BIN_DIR}
 

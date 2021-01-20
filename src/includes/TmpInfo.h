@@ -39,7 +39,7 @@ typedef struct TmpInfo {
         memset(tabulist, 0, n * sizeof(int));
         memset(inTabuList, 0, n * sizeof(bool));
         for (int i = 0; i < n; i++) {
-            conf[i] = 1;
+            conf[i] = true;
         }
         memset(sc, 0, n * sizeof(double));
         for (int i = 0; i < n; i++) {
@@ -53,7 +53,7 @@ typedef struct TmpInfo {
         clearL();
     }
 
-    void printTmpInfo() {
+    void printInfo() {
         printf("Scoring: \n");        
         for (int i = 0; i < n; i++) {
             printf("%0.2f ", sc[i]);
@@ -63,6 +63,7 @@ typedef struct TmpInfo {
         for (int i = 0; i < n; i++) {
             printf("%d ", tabulist[i]);
         }
+        printf("\n");
         printf("conf\n");
         for (int i = 0; i < n; i++) {
             printf("%d ", conf[i]);
@@ -97,6 +98,7 @@ typedef struct TmpInfo {
         int* adjPtn = _G->getADJPnt(u);
         for (int i = 0; i < _G->getADJListSize(u); i++) {
             conf[*adjPtn] = true;
+            adjPtn++;
         }
     }
 
@@ -228,7 +230,7 @@ typedef struct TmpInfo {
         }
     }
 */
-    void AddToL(int u) {
+    void addToL(int u) {
         L[nL] = u;
         nL++;
     }
@@ -242,16 +244,14 @@ typedef struct TmpInfo {
         for (int u = 0; u < n; u++) {
             if (set->set[u] && !inTabuList[u]) {
                 if (nL == 0) {                        
-                    L[nL] = u;
-                    nL ++;
+                    addToL(u);
                 } else {
                     if (sc[L[nL]] < sc[u]) {                            
-                        L[0] = u;
-                        nL = 1;
+                        clearL();
+                        addToL(u);
                     } else {
                         if (sc[L[nL]] == sc[u]) {
-                            L[nL] = u;
-                            nL ++;
+                           addToL(u);
                         }
                     }
                 }
@@ -263,29 +263,35 @@ typedef struct TmpInfo {
     }
 
     int findNextVertexToADD(GeneInfo* geneInfo){
+        printf("start to find next vertex to add\n");
         DSSet* set = geneInfo->getDSSet();
         Owner* owner = geneInfo->getOwner();
         clearL();
         for (int u = 0; u < n; u++) {
-            if (!set->set[u] && conf[u] && owner->nOwner[u] == 0) {
+            if (owner->nOwner[u] == 0) {
+                printf("potential candidate: %d, conf[%u] = %zu\n", u, conf[u]);
+            }
+            if (owner->nOwner[u] == 0 && conf[u]) {
+                //printf("potential candidate: %d\n", u);
                 if (nL == 0) {                        
-                    L[nL] = u;
-                    nL ++;
+                   addToL(u);
                 } else {
                     if (sc[L[nL]] < sc[u]) {                            
-                        L[0] = u;
-                        nL = 1;
+                        clearL();
+                        addToL(u);
                     } else {
                         if (sc[L[nL]] == sc[u]) {
-                            L[nL] = u;
-                            nL ++;
+                            addToL(u);
                         }
                     }
                 }
             }
         }
+        //geneInfo->getOwner()->printInfo();
+        //printInfo();
+        printf("nL = %d\n", nL);
         int v = L[rand() % nL];
-        printf("find next verte to add: vertex[%d] with sc = %0.2f\n", v, sc[v]);
+        printf("find next vertex to add: vertex[%d] with sc = %0.2f\n", v, sc[v]);
         return v;
     }
 

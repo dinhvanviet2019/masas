@@ -18,8 +18,8 @@ class Gene {
 public:
     Gene(Graph * graph);
     ~Gene();
-    void construct(TmpInfo* tmpInfo, bool inMating, Gene* bestKnown);
-    void C_LS(TmpInfo* tmpInfo, Gene* CSlb);
+    void construct(bool inMating, Gene* bestKnown);
+    void C_LS(TmpInfo* tmpInfo, Gene* CSlb, Gene* bestKnown);
 
     void copy(Gene* cell) {
         geneInfo->copy(cell->getGenInfo());
@@ -38,6 +38,10 @@ public:
     }
     bool isCovered(int v) {
         return geneInfo->getDSSet()->set[v];
+    }
+
+    void printInfo() {
+        geneInfo->printInfo();
     }
 
 private:

@@ -1,6 +1,8 @@
 #ifndef OWNER_H
 #define OWNER_H
 #include "Graph.h"
+#include <cstdio>
+#include <stdlib.h>     /* exit, EXIT_FAILURE */
 
 typedef struct Owner {
     Owner(Graph* G) {
@@ -31,18 +33,28 @@ typedef struct Owner {
             nOwner[*adjPnt]++;            
             adjPnt++;
         }
+        bool checkmate =  nCover == testNCover();
     }
 
     void removeMainVertex(int u) {
         int* adjPnt = _G->getADJPnt(u);
         for (int i = 0; i < _G->getADJListSize(u); i++) {
-            if (nOwner[*adjPnt] == 0) {
+            if (nOwner[*adjPnt] == 1) {
                 nCover --;
                 addToUV(*adjPnt);
             }
             nOwner[*adjPnt]--;
             adjPnt++;
         }
+        bool checkmate =  nCover == testNCover();
+    }
+
+    int testNCover() {
+        int res = 0;
+        for (int i = 0; i < n; i++) {
+            res += nOwner[i] > 0;
+        }
+        return res;
     }
 
     // copy its owner to other
@@ -87,6 +99,7 @@ typedef struct Owner {
     }
 
     void printInfo() {
+        printf("nCover = %d\n", nCover);
         printf("nOwner\n");
         for (int i = 0; i < n; i++) {
             printf("%d ", nOwner[i]);
