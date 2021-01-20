@@ -86,9 +86,7 @@ void Gene::C_LS(TmpInfo* tmpInfo, Gene* CSlb) {
     srand(time(NULL));
     // init
     CSlb->copy(this);
-    tmpInfo->init();        
-    tmpInfo->initSC(geneInfo);
-    tmpInfo->clearL();
+    tmpInfo->init();   
     int iter = 0;
     DSSet* set = geneInfo->getDSSet();
     Owner* owner = geneInfo->getOwner();
@@ -123,7 +121,6 @@ void Gene::C_LS(TmpInfo* tmpInfo, Gene* CSlb) {
             set->addMainVertex(maxc);
             owner->addMainVertex(maxc);
             tmpInfo->updateConfWhenAddMainVertex(maxc);
-            tmpInfo->updateSC(v, geneInfo);
             tmpInfo->addToTabuList(maxc);            
             tmpInfo->updatePP(owner);
             tmpInfo->create_SCUpatingtList_From_UVs(owner);

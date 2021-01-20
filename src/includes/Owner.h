@@ -86,6 +86,26 @@ typedef struct Owner {
         }
     }
 
+    void printInfo() {
+        printf("nOwner\n");
+        for (int i = 0; i < n; i++) {
+            printf("%d ", nOwner[i]);
+        }
+        printf("\n");
+        printf("UV\n");
+        for (int i = 0; i < numUVs; i++) {
+            printf("%d ", uVers[i]);
+        }
+        printf("\n");
+    }
+
+    void printUV() {
+        for (int i = 0; i < numUVs; i++) {
+            printf("%d ", uVers[i]);
+        }
+        printf("\n");
+    }
+
     int calTO(int u) {
         int* adjPtn = _G->getADJPnt(u);
         int res = 0;

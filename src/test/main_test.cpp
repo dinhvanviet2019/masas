@@ -19,11 +19,13 @@ int main() {
     DSSet * set = genInfo->getDSSet();
     Owner* owner = genInfo->getOwner();    
     //Owner* owner = new Owner(graph);
-    //tmpInfo->init(genInfo);    
+    tmpInfo->init();
+    tmpInfo->initSC(genInfo);
     genInfo->addMainVertex(2);    
+    //genInfo->addMainVertex(4);
     //genInfo->addMainVertex(8);
     //genInfo->addMainVertex(16);
-    //owner->printUV();    
+    owner->printUV();
     delete genInfo;
     delete tmpInfo;
     delete graph;
