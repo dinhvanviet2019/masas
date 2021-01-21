@@ -98,6 +98,7 @@ typedef struct TmpInfo {
         int* adjPtn = _G->getADJPnt(u);
         for (int i = 0; i < _G->getADJListSize(u); i++) {
             //conf[*adjPtn] = 1;
+            
             int* adjUPtn = _G->getADJPnt(*adjPtn);
             for (int j = 0; j < _G->getADJListSize(*adjUPtn); j++) {
                 conf[*adjUPtn] = 1;
@@ -111,11 +112,13 @@ typedef struct TmpInfo {
         int* adjPtn = _G->getADJPnt(u);
         for (int i = 0; i < _G->getADJListSize(u); i++) {
             //conf[*adjPtn] = 1;
+            
             int* adjUPtn = _G->getADJPnt(*adjPtn);
             for (int j = 0; j < _G->getADJListSize(*adjUPtn); j++) {
                 conf[*adjUPtn] = 1;
                 adjUPtn++;
             }
+            
             adjPtn++;
         }
         conf[u] = 0;
@@ -285,7 +288,7 @@ typedef struct TmpInfo {
         //printInfo();
         for (int u = 0; u < n; u++) {
             if (owner->nOwner[u] == 0) {
-                printf("potential candidate: %d, conf[%d] = %d, 1 = %d \n", u, u, conf[u], true);
+                //printf("potential candidate: %d, conf[%d] = %d, 1 = %d \n", u, u, conf[u], true);
             }
             if (owner->nOwner[u] == 0 && conf[u] == 1) {
                 //printf("potential candidate: %d\n", u);
@@ -305,6 +308,9 @@ typedef struct TmpInfo {
         }
         //geneInfo->getOwner()->printInfo();
         //printInfo();
+        if (nL == 0) {
+            return -1;
+        }
         printf("nL = %d\n", nL);
         int v = L[rand() % nL];
         printf("find next vertex to add: vertex[%d] with sc = %0.2f\n", v, sc[v]);

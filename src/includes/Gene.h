@@ -46,7 +46,7 @@ public:
 
 private:
     const double alpha = 0.8;
-    const int noimpro_iter = 50000;
+    const int noimpro_iter = 1000;
     // graph info
     int n;
     Graph * G;

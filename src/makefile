@@ -16,6 +16,7 @@ build:
 
 compile: $(BINS)
 test: $(BINS)
+	reset
 	$^
 
 
@@ -23,7 +24,6 @@ $(BINS): $(SRCS)
 	$(CC) -o $@ $^ -I $(INC_DIR)
 
 clean:
-	reset
 	rm -rf ${OBJ_DIR}
 	rm -rf ${BIN_DIR}
 

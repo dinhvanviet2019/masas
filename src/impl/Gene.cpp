@@ -103,6 +103,7 @@ void Gene::C_LS(TmpInfo* tmpInfo, Gene* CSlb, Gene* bestKnown) {
         printf("iter = %d\n", iter);
         printf("start 1st stage\n");
         if (owner->nCover == n) {
+            set->printInfo();
             if (set->value < CSlb->getValue()) {
                 CSlb->copy(this);
                 printf("CSlb value = %0.2f\n", CSlb->getValue());
@@ -121,7 +122,7 @@ void Gene::C_LS(TmpInfo* tmpInfo, Gene* CSlb, Gene* bestKnown) {
             continue;
         }
         //printf("test point\n");
-        set->printInfo();
+        printf("CSlb value = %0.2f\n", CSlb->getValue());
         int v = tmpInfo->findNextVertexToRemove(set);
         printf("2nd removed vertex = %d\n", v);
         geneInfo->removeMainVertex(v);
@@ -140,8 +141,12 @@ void Gene::C_LS(TmpInfo* tmpInfo, Gene* CSlb, Gene* bestKnown) {
         printf("start 2nd stage!\n");
         while (owner->nCover < n) {
             printf("nCover = %d\n", owner->nCover);
-            int maxc = tmpInfo->findNextVertexToADD(geneInfo);
+            int maxc = tmpInfo->findNextVertexToADD(geneInfo);            
             printf("vertex maxc = %d\n", maxc);
+            if (maxc == -1) {
+                //no way to escape
+                return;
+            }
             if (set->value + G->getWeight(maxc) >= bestKnown->getValue()) {
                 break;
             }

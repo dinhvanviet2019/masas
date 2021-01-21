@@ -24,7 +24,9 @@ int main() {
     Gene* bestKnown = new Gene(graph);
     CSlb->copy(gene);    
     bestKnown->copy(gene);  
-    CSlb->C_LS(tmpInfo, CSlb, bestKnown);
+    gene->C_LS(tmpInfo, CSlb, bestKnown);
+    printf("starting point!\n");
+    bestKnown->printInfo();
     printf("Testing Result!\n");
     CSlb->printInfo();
     delete gene;
