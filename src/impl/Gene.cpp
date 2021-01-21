@@ -105,6 +105,7 @@ void Gene::C_LS(TmpInfo* tmpInfo, Gene* CSlb, Gene* bestKnown) {
         if (owner->nCover == n) {
             if (set->value < CSlb->getValue()) {
                 CSlb->copy(this);
+                printf("CSlb value = %0.2f\n", CSlb->getValue());
                 iter = 0;
             }                        
             int v = tmpInfo->findNextVertexToRemove(set);

@@ -39,7 +39,7 @@ typedef struct TmpInfo {
         memset(tabulist, 0, n * sizeof(int));
         memset(inTabuList, 0, n * sizeof(bool));
         for (int i = 0; i < n; i++) {
-            conf[i] = true;
+            conf[i] = 1;
         }
         memset(sc, 0, n * sizeof(double));
         for (int i = 0; i < n; i++) {
@@ -84,12 +84,12 @@ typedef struct TmpInfo {
     void addToTabuList(int u) {
         tabulist[nTabu] = u;
         nTabu++;
-        inTabuList[u] = true;
+        inTabuList[u] = 1;
     }
     
     void clearTabu() {
         for (int i = 0; i < nTabu; i++) {
-            inTabuList[tabulist[i]] = false;
+            inTabuList[tabulist[i]] = 0;
         }
         nTabu = 0;
     }
@@ -97,13 +97,28 @@ typedef struct TmpInfo {
     void updateConfWhenAddMainVertex(int u) {                
         int* adjPtn = _G->getADJPnt(u);
         for (int i = 0; i < _G->getADJListSize(u); i++) {
-            conf[*adjPtn] = true;
+            //conf[*adjPtn] = 1;
+            int* adjUPtn = _G->getADJPnt(*adjPtn);
+            for (int j = 0; j < _G->getADJListSize(*adjUPtn); j++) {
+                conf[*adjUPtn] = 1;
+                adjUPtn++;
+            }
             adjPtn++;
         }
     }
 
-    void updateConfWhenRemoveVertex(int u) {
-        conf[u] = false;
+    void updateConfWhenRemoveVertex(int u) {        
+        int* adjPtn = _G->getADJPnt(u);
+        for (int i = 0; i < _G->getADJListSize(u); i++) {
+            //conf[*adjPtn] = 1;
+            int* adjUPtn = _G->getADJPnt(*adjPtn);
+            for (int j = 0; j < _G->getADJListSize(*adjUPtn); j++) {
+                conf[*adjUPtn] = 1;
+                adjUPtn++;
+            }
+            adjPtn++;
+        }
+        conf[u] = 0;
     }
 
     void initSC(GeneInfo* geneInfo) {
@@ -267,11 +282,12 @@ typedef struct TmpInfo {
         DSSet* set = geneInfo->getDSSet();
         Owner* owner = geneInfo->getOwner();
         clearL();
+        //printInfo();
         for (int u = 0; u < n; u++) {
             if (owner->nOwner[u] == 0) {
-                printf("potential candidate: %d, conf[%u] = %zu\n", u, conf[u]);
+                printf("potential candidate: %d, conf[%d] = %d, 1 = %d \n", u, u, conf[u], true);
             }
-            if (owner->nOwner[u] == 0 && conf[u]) {
+            if (owner->nOwner[u] == 0 && conf[u] == 1) {
                 //printf("potential candidate: %d\n", u);
                 if (nL == 0) {                        
                    addToL(u);
@@ -312,7 +328,7 @@ typedef struct TmpInfo {
             return;
         }
         scUpdatingList[scLen] = u;
-        inSCUpdatingList[u] = true;
+        inSCUpdatingList[u] = 1;
         scLen++;
     }
 

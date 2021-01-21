@@ -87,7 +87,7 @@ void Population::run() {
     Gene* x = pops[i];
     Gene* y = pops[j];
     pdo(x, y);    
-    bool is_not_terminated = true;    
+    bool is_not_terminated = 1;    
     while (is_not_terminated) {
         child->C_LS(CSlb);
     }

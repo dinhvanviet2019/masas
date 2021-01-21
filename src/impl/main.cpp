@@ -19,12 +19,14 @@ int main() {
     TmpInfo* tmpInfo = new TmpInfo(graph);
     DSSet * set = genInfo->getDSSet();
     Owner* owner = genInfo->getOwner();
-    gene->construct(false, NULL);    
+    gene->construct(0, NULL);    
     Gene* CSlb = new Gene(graph);
     Gene* bestKnown = new Gene(graph);
     CSlb->copy(gene);    
     bestKnown->copy(gene);  
     CSlb->C_LS(tmpInfo, CSlb, bestKnown);
+    printf("Testing Result!\n");
+    CSlb->printInfo();
     delete gene;
     delete CSlb;
     delete bestKnown;

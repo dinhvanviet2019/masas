@@ -17,11 +17,11 @@ typedef struct DSSet{
         delete[] set;
     }
     void addMainVertex(int u) {
-        set[u] = true;
+        set[u] = 1;
         value += _G->getWeight(u);
     }
     void removeMainVertex(int u) {
-        set[u] = false;
+        set[u] = 0;
         value -= _G->getWeight(u);
     }
     void copy(DSSet * dsset) {
