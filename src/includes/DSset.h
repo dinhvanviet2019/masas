@@ -24,6 +24,12 @@ typedef struct DSSet{
         set[u] = 0;
         value -= _G->getWeight(u);
     }
+
+    void clearInfo() {
+        value = 0;
+        memset(set, 0, n * sizeof(bool));
+    }
+
     void copy(DSSet * dsset) {
         memcpy(set, dsset->set, n * sizeof(bool));
         value = dsset->value;

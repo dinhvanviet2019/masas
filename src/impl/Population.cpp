@@ -19,6 +19,7 @@ Population::Population(Graph* graph) {
     }
     tmpInfo = new TmpInfo(graph);
     bestKnown = new Gene(graph);
+    child = new Gene(graph);
     CSlb = new Gene(graph);
 }
 
@@ -27,80 +28,95 @@ Population::~Population() {
         delete pops[i];
     }
     delete[] pops;
+    delete tmpInfo;
     delete bestKnown;
+    delete child;
     delete CSlb;
 }
 
-void Population::initPopulation() {    
-    for (int i = 0; i < nGens; i++) {
-        pops[i]->setTmpInfo(tmpInfo);
-        pops[i]->setCLSB(CSlb);
-        pops[i]->construct();
-        pops[i]->C_LS();
-    }
-    pops[0]->copyTo(bestKnown);
-    for (int i = 1; i < nGens; i++) {
-        if (bestKnown->getValue() > pops[i]->getValue()) {
-            pops[i]->copyTo(bestKnown);
+void Population::initPopulation() {  
+    bestKnown->construct(false, nullptr);
+    for (int i = 0; i < nGens; i++) {        
+        pops[i]->construct(false, bestKnown);
+        pops[i]->C_LS(tmpInfo, CSlb, bestKnown);
+        if (pops[i]->getValue() < bestKnown->getValue()) {
+            bestKnown->copy(pops[i]);
         }
     }
 }
 
-void Population::pdo(Gene* x, Gene* y) {
+void Population::pdo(Gene* x, Gene* y, Gene* child) {
+    initPopulation();
     srand(time(NULL));
     child->clearInfo();
+    GeneInfo* genInfoX = x->getGenInfo();
+    GeneInfo* genInfoY = y->getGenInfo();
+    GeneInfo* genInfo = child->getGenInfo();
     for (int i = 0; i < graph->getGraphSize(); i++) {
-        if (pops[i]->contains(i) && pops[i]->contains(j) && rand() % 100 < beta1) {
-            child->addMainVertex(i);
+        if (genInfoX->contains(i) && genInfoY->contains(i) && rand() % 100 < beta1) {
+            genInfo->addMainVertex(i);
         } else {
-            if (x->contains(i) || y->contains(j)) {
-                if (!child->isCovered(i)) {
+            if (genInfoX->contains(i) || genInfoY->contains(i)) {
+                if (!genInfo->isCovered(i)) {
                     if (rand() % 100 < (100 - beta1)) {
-                        child->addMainVertex(i);
+                        genInfo->addMainVertex(i);
                     }
                 }
             } else {
                 if (rand() % 100 < beta2) {
                     int* adjPtn = graph->getADJPnt(i);
                     for (int j = 0; j < graph->getADJListSize(i); j++) {
-                        if (child->contains(*adjPtn)) {
-                            child->removeMainVertex(*adjPtn);
+                        if (genInfo->contains(*adjPtn)) {
+                            genInfo->removeMainVertex(*adjPtn);
                         }
                         adjPtn++;
                     }
-                    child->addMainVertex(i);
+                    genInfo->addMainVertex(i);
                 }
             }
         }
     }
-    child->construct();
-
+    child->construct(true, bestKnown);
 }
 
 void Population::poolUpdate(Gene* nextGen) {
-
-}
-
-void Population::run() {
-    int i = rand() % N_GENS;
-    int j = rand() % N_GENS;
-    Gene* x = pops[i];
-    Gene* y = pops[j];
-    pdo(x, y);    
-    bool is_not_terminated = 1;    
-    while (is_not_terminated) {
-        child->C_LS(CSlb);
+    int worstID = 0;
+    for (int i = 1; i < nGens; i++) {
+        if (pops[worstID]->getValue() > pops[i]->getValue()) {
+            worstID = i;
+        }
     }
-    if (CSlb->getValue() < bestKnown->getValue()) {
-        CSlb->copyTo(bestKnown);
-    }
-    poolUpdate(CSlb);
-        if (CSlb == NULL) {
-            pdo(x, y)
-        } else {
-            pdo(x, CSlb);
+    if (pops[worstID]->getValue() > nextGen->getValue()) {
+        pops[worstID]->copy(nextGen);
+    } else {
+        if (rand() % 1000 < 500) {
+            pops[worstID]->copy(nextGen);
         }
     }
 }
 
-// a communication
+void Population::run() {
+    int i = rand() % nGens;
+    int j = rand() % nGens;
+    Gene* x = pops[i];
+    Gene* y = pops[j];
+    pdo(x, y, child);
+    int iter = 0;
+    while (iter < maxIters) {
+        child->C_LS(tmpInfo, CSlb, bestKnown);
+        if (CSlb->getValue() < bestKnown->getValue()) {
+            bestKnown->copy(CSlb);
+        }
+        poolUpdate(CSlb);
+        if (CSlb->getValue() >= child->getValue()) {            
+            i = rand() % nGens;
+            j = rand() % nGens;
+            x = pops[i];
+            y = pops[j];
+            pdo(x, y, child);
+        } else {            
+            pdo(x, CSlb, child);
+        }
+        iter++;           
+    }     
+}

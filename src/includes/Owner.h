@@ -57,6 +57,13 @@ typedef struct Owner {
         return res;
     }
 
+    void clearInfo() {
+        nCover = 0;
+        memset(nOwner, 0, n * sizeof(int));
+        numUVs = 0;
+        memset(uVers, 0, n * sizeof(int));
+    }
+
     // copy its owner to other
     void copy(Owner * owner) {
         nCover = owner->nCover;

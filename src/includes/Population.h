@@ -18,15 +18,19 @@ class Population {
 public:
     Population(Graph* graph);
     ~Population();
-    void initPopulation();    
-    void pdo(Gene* x, Gene* y);
-    void poolUpdate(Gene * nextGen);
     void run();
-    Gene* getGene(int i);    
+    Gene* getBestKnownGene() {
+        return bestKnown;
+    }
 private:
     const int nGens = 12;
     const int beta1 = 80;
     const int beta2 = 5;
+    const int maxIters = 1000;
+
+    void initPopulation();
+    void pdo(Gene* x, Gene* y, Gene* child);
+    void poolUpdate(Gene * nextGen);
 
     Graph* graph;
     Gene ** pops;

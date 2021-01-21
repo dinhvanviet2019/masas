@@ -36,8 +36,9 @@ public:
     bool contains(int v) {
         return geneInfo->getOwner()->nOwner[v];
     }
-    bool isCovered(int v) {
-        return geneInfo->getDSSet()->set[v];
+
+    void clearInfo() {
+        geneInfo->clearInfo();
     }
 
     void printInfo() {

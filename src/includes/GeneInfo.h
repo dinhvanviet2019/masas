@@ -11,6 +11,14 @@ public:
         owner = new Owner(graph);
     }
 
+    bool contains(int v) {
+        return dsSet->set[v];
+    }
+
+    bool isCovered(int v) {
+        return owner->nOwner[v] > 0;
+    }
+
     void addMainVertex(int u) {
         printf("Geneinfo: add vertex %d\n", u);
         if (u < 0 || u >= n || dsSet->set[u]) {
@@ -31,6 +39,11 @@ public:
         dsSet->removeMainVertex(u);
         owner->removeMainVertex(u);
         printf("Geneinfo: remove vertex %d completely\n", u);
+    }
+
+    void clearInfo() {
+        dsSet->clearInfo();
+        owner->clearInfo();
     }
      
     void copy(GeneInfo* geneInfo) {

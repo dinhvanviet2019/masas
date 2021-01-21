@@ -5,7 +5,5 @@ class MASAS {
 public:
     MASAS();
     ~MASAS();
-    void solve(char* filepath);
-    void run();
-private:
+    void solve(char* filepath);    
 };
