@@ -30,7 +30,7 @@ void Gene::construct(bool inMating, Gene* bestKnown) {
     Owner* owner = geneInfo->getOwner();
     nL = 0;
     for (int i = 0; i < n; i++) {
-        if (owner->nOwner[i] == 0) {
+        if (owner->getNOwner[i] == 0) {
             L[nL] = i;
             nL++;
         }
@@ -49,8 +49,10 @@ void Gene::construct(bool inMating, Gene* bestKnown) {
             }
         }
         // max p
-        printf("nCover = %d\n", owner->nCover);
-        printf("nL = %d\n", nL);
+        #if DEBUG2
+            printf("nCover = %d\n", owner->getNCover());
+            printf("nL = %d\n", nL);
+        #endif
         pmax = L[0];
         for (int i = 0; i < nL; i++) {
             if (p[pmax] < p[L[i]]) {
@@ -58,7 +60,6 @@ void Gene::construct(bool inMating, Gene* bestKnown) {
             }
         }
         double threshhold = p[pmin] + alpha * (p[pmax] - p[pmin]); // calculate threshold for RCL
-        printf("threshold %0.2f \n", threshhold);
         // create RCL        
         nRCL = 0;
         for (int i = 0; i < nL; i++) {
@@ -66,8 +67,10 @@ void Gene::construct(bool inMating, Gene* bestKnown) {
                 RCL[nRCL] = L[i];
                 nRCL++;
             }
-        }        
-        printf("nRCL = %d\n", nRCL);
+        }
+        #if DEBUG2
+            printf("nRCL = %d\n", nRCL);
+        #endif
         // choose vertex
         int randID = rand() % nRCL;
         int u = RCL[randID];
@@ -102,70 +105,46 @@ void Gene::C_LS(TmpInfo* tmpInfo, Gene* CSlb, Gene* bestKnown) {
     DSSet* set = geneInfo->getDSSet();
     Owner* owner = geneInfo->getOwner();
     while (iter < noimpro_iter) {
-        printf("iter = %d\n", iter);
-        printf("start 1st stage\n");
+        #if INFO
+            printf("iter = %d\n", iter);
+        #endif
         if (owner->nCover == n) {
-            set->printInfo();
             if (set->value < CSlb->getValue()) {
                 CSlb->copy(this);
                 printf("CSlb value = %0.2f\n", CSlb->getValue());
                 iter = 0;
             }                        
             int v = tmpInfo->findNextVertexToRemove(set);
-            printf("1st removed vertex = %d\n", v);
             geneInfo->removeMainVertex(v);
-            printf("start to update config completely\n");
             tmpInfo->updateConfWhenRemoveVertex(v);
-            printf("update config completely\n");
             tmpInfo->create_N2_SCUpdatingList(v, owner);
-            printf("create N2 SCUpdateing List completely\n");
             tmpInfo->updateSCFromList(geneInfo);
-            printf("nCover = %d \n", owner->nCover);
             continue;
         }
-        //printf("test point\n");
-        printf("CSlb value = %0.2f\n", CSlb->getValue());
         int v = tmpInfo->findNextVertexToRemove(set);
-        printf("2nd removed vertex = %d\n", v);
         geneInfo->removeMainVertex(v);
-        printf("start to update config completely\n");
         tmpInfo->updateConfWhenRemoveVertex(v);
-        printf("update config completely\n");
         tmpInfo->create_N2_SCUpdatingList(v, owner);
-        printf("create N2 SCUpdateing List completely\n");
         tmpInfo->updateSCFromList(geneInfo);
-        printf("update SC completely\n");
         tmpInfo->clearTabu();
-        printf("clear tabu completely\n");
         //v : = a vertex in CS with the highest value sc ( v ) and v ∈
         // tabu_list, breaking ties in the oldest one;
-        printf("complete 1st stage\n");
-        printf("start 2nd stage!\n");
         while (owner->nCover < n) {
-            printf("nCover = %d\n", owner->nCover);
             int maxc = tmpInfo->findNextVertexToADD(geneInfo);            
-            printf("vertex maxc = %d\n", maxc);
             if (maxc == -1) {
                 //no way to escape
                 return;
             }
-            if (set->value + G->getWeight(maxc) >= bestKnown->getValue()) {
+            if (set->getValue() + G->getWeight(maxc) >= bestKnown->getValue()) {
                 break;
             }
             geneInfo->addMainVertex(maxc);
-            printf("add vertex completely\n");
             tmpInfo->updateConfWhenAddMainVertex(maxc);
-            printf("update config when add completely\n");
             tmpInfo->addToTabuList(maxc);
-            printf("add tabulist PP\n");
             tmpInfo->updatePP(owner);
-            printf("update PP completely");
             tmpInfo->create_SCUpatingtList_From_UVs(owner);
-            printf("create SC updating list from uvs\n");
             tmpInfo->updateSCFromList(geneInfo);
-            printf("update sc completely\n");      
         }
-        printf("complete 2nd stage!\n");
         iter ++;
     }
 }

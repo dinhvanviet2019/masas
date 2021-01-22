@@ -1,4 +1,5 @@
 CC := g++
+LDFLASG := -DINFO
 SRC_DIR := ./impl
 INC_DIR := ./includes
 OBJ_DIR := ./build
