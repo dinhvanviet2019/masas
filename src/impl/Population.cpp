@@ -74,7 +74,7 @@ void Population::pdo(Gene* x, Gene* y, Gene* child) {
         }
     }
     printf("start repair gene\n");
-    child->printInfo();
+    //child->printInfo();
     child->construct(true, bestKnown);
 }
 

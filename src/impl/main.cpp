@@ -25,10 +25,10 @@ int main() {
     x->construct(false, nullptr);
     y->construct(false, nullptr);
     printf("start o mating\n");
-    //pops->pdo(y, y, child);
+    pops->pdo(y, y, child);
     x->printInfo();
     y->printInfo();
-    //child->printInfo();
+    child->printInfo();
     delete tmpInfo;
     delete x;
     delete y;

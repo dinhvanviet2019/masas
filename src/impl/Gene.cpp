@@ -125,7 +125,6 @@ void Gene::C_LS(TmpInfo* tmpInfo, Gene* CSlb, Gene* bestKnown) {
     // init
     CSlb->copy(this);
     tmpInfo->init(geneInfo);
-    tmpInfo->printInfo();   
     int iter = 0;
     DSSet* set = geneInfo->getDSSet();
     Owner* owner = geneInfo->getOwner();

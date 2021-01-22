@@ -51,7 +51,6 @@ void Owner::addMainVertex(int u) {
 void Owner::removeMainVertex(int u) {
     int* adjPnt = _G->getADJPnt(u);
     for (int i = 0; i < _G->getADJListSize(u); i++) {
-        printf("nOwner[%d] = %d\n", *adjPnt, nOwner[*adjPnt]);
         if (nOwner[*adjPnt] == 1) {
             nCover --;
             addToUV(*adjPnt);
@@ -59,7 +58,6 @@ void Owner::removeMainVertex(int u) {
         nOwner[*adjPnt]--;
         adjPnt++;
     }
-    printInfo();
     #if DEBUG1
         printf("[DEBUG LEVEL 1] Remove Vertex To Owner\n");
         printf("remove vertex %d\n", u);

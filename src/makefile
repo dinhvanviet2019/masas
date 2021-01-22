@@ -10,7 +10,7 @@ BINS := $(BIN_DIR)/main
 
 .PHONY: build compile clean test
 
-all: build compile
+all: clean build compile
 build:
 	echo $(SRCS)
 	mkdir -p ${OBJ_DIR}
@@ -23,7 +23,7 @@ test: $(BINS)
 
 
 $(BINS): $(SRCS)
-	$(CC) -o $@ $^ -I $(INC_DIR)
+	$(CC) -o $@ $^ -I $(INC_DIR) $(LDFLASG)
 
 clean:
 	rm -rf ${OBJ_DIR}
