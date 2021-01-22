@@ -1,4 +1,5 @@
  #include "DSSet.h"
+ #include <cstdio>
 
  DSSet::DSSet(Graph * G) {
     _G = G;

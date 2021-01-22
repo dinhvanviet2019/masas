@@ -1,8 +1,7 @@
-#ifndef OWNER_H
-#define OWNER_H
 #include "Owner.h"
 #include <cstdio>
 #include <stdlib.h>     /* exit, EXIT_FAILURE */
+#include <cstring>
 
 Owner::Owner(Graph* G) {
     _G = G;
@@ -145,5 +144,3 @@ int Owner::calTO(int u) {
     }
     return res;
 }
-
-#endif // end of file

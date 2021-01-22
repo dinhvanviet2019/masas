@@ -20,30 +20,12 @@ public:
     ~Gene();
     void construct(bool inMating, Gene* bestKnown);
     void C_LS(TmpInfo* tmpInfo, Gene* CSlb, Gene* bestKnown);
-
-    void copy(Gene* cell) {
-        geneInfo->copy(cell->getGenInfo());
-    }
-    
-    GeneInfo* getGenInfo() {
-        return geneInfo;
-    }
-    
-    double getValue() {
-        return geneInfo->getDSSet()->value;
-    }
-
-    bool contains(int v) {
-        return geneInfo->getOwner()->nOwner[v];
-    }
-
-    void clearInfo() {
-        geneInfo->clearInfo();
-    }
-
-    void printInfo() {
-        geneInfo->printInfo();
-    }
+    void copy(Gene* cell);    
+    GeneInfo* getGenInfo();    
+    double getValue();
+    bool contains(int v);
+    void clearInfo();
+    void printInfo();
 
 private:
     const double alpha = 0.8;

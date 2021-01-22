@@ -1,6 +1,5 @@
-#ifndef TMPINFO_H
-#define TMPINFO_H
-#include "TmpInfo2.h"
+#include "TmpInfo.h"
+#include "Random.h"
 #include <cstdio>
 #include <cstdlib>
 #include <ctime>
@@ -34,7 +33,6 @@ TmpInfo::~TmpInfo() {
 }
 
 void TmpInfo::init(GeneInfo* geneInfo) {
-    srand(time(NULL));  
     for (int i = 0; i < n; i++) {
         conf[i] = 1;
     }
@@ -83,7 +81,7 @@ int TmpInfo::findNextVertexToADD(GeneInfo* geneInfo){
     #if DEBUG1 || DEBUG2
         printf("nL = %d\n", nL);
     #endif
-    int v = L[rand() % nL];
+    int v = L[Random::getRandInt(nL)];
     #if INFO
         printf("TmpInfo: Next vertex to add: vertex[%d] with sc = %0.2f\n", v, sc[v]);
     #endif
@@ -120,7 +118,7 @@ int TmpInfo::findNextVertexToRemove(DSSet* set) {
     #if DEBUG1 || DEBUG2
         printf("nL = %d\n", nL);
     #endif
-    int v = L[rand() % nL];
+    int v = L[Random::getRandInt(nL)];
     #if INFO
         printf("TmpInfo: Next vertex to remove: vertex[%d] with sc = %0.2f\n", v, sc[v]);
     #endif
@@ -164,13 +162,13 @@ void TmpInfo::updateConfWhenRemoveVertex(int u) {
     conf[u] = 0;
 }
 
-void updatePP(Owner* owner) {
+void TmpInfo::updatePP(Owner* owner) {
     for (int i = 0; i < owner->getUVSize(); i++) {
         pp[owner->getUncoveredVertex(i)]++;
     }
 }
 
-void updateSCFromList(GeneInfo* geneInfo) {
+void TmpInfo::updateSCFromList(GeneInfo* geneInfo) {
     int u, v;
     DSSet* set = geneInfo->getDSSet();    
     Owner* owner = geneInfo->getOwner();
@@ -186,7 +184,7 @@ void updateSCFromList(GeneInfo* geneInfo) {
                 }                    
                 adjPtn++;
             }
-            sc[i] = -1/_G->getWeight(u) * sumPP;
+            sc[u] = -1/_G->getWeight(u) * sumPP;
         } else {
             if (owner->getNOwner(u) == 0) {
                 int* adjPtn = _G->getADJPnt(u);
@@ -198,7 +196,7 @@ void updateSCFromList(GeneInfo* geneInfo) {
                     }
                     adjPtn++;
                 }
-                sc[i] = 1/_G->getWeight(i) * sumPP;
+                sc[u] = 1/_G->getWeight(u) * sumPP;
             }
         }
     }
@@ -296,7 +294,7 @@ void TmpInfo::initSC(GeneInfo* geneInfo) {
     }
 }
 
-void tmpInfo::clearTabu() {
+void TmpInfo::clearTabu() {
     for (int i = 0; i < nTabu; i++) {
         inTabuList[tabulist[i]] = 0;
     }
@@ -331,5 +329,3 @@ void TmpInfo::addToL(int u) {
 void TmpInfo::clearL() {
     nL = 0;
 }
-
-#endif

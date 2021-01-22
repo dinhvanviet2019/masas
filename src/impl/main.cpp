@@ -8,8 +8,10 @@
 #include "TmpInfo.h"
 #include "Gene.h"
 #include "Population.h"
+#include "Random.h"
 
 int main() {
+    
     printf("I Loves You, so you\n");
     const int MAX_LENS = 1024;
     char filePath[MAX_LENS];
@@ -23,14 +25,14 @@ int main() {
     x->construct(false, nullptr);
     y->construct(false, nullptr);
     printf("start o mating\n");
-    pops->pdo(y, y, child);
-    //x->printInfo();
-    //y->printInfo();
+    //pops->pdo(y, y, child);
+    x->printInfo();
+    y->printInfo();
     //child->printInfo();
     delete tmpInfo;
     delete x;
     delete y;
     delete child;
-    delete pops;
+    delete pops;    
     return 0;
 }

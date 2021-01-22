@@ -5,13 +5,14 @@ INC_DIR := ./includes
 OBJ_DIR := ./build
 BIN_DIR := ./build
 
-SRCS := $(SRC_DIR)/Graph.cpp $(SRC_DIR)/SmallGraph.cpp $(SRC_DIR)/MassiveGraph.cpp $(SRC_DIR)/GraphFactory.cpp $(SRC_DIR)/Gene.cpp $(SRC_DIR)/Population.cpp $(SRC_DIR)/main.cpp
+SRCS := $(wildcard $(SRC_DIR)/*.cpp)
 BINS := $(BIN_DIR)/main
 
 .PHONY: build compile clean test
 
 all: build compile
 build:
+	echo $(SRCS)
 	mkdir -p ${OBJ_DIR}
 	mkdir -p ${BIN_DIR}
 

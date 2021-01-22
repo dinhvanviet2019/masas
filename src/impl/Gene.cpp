@@ -1,4 +1,6 @@
 #include "Gene.h"
+#include "Random.h"
+#include <cstdio>
 #include <cstring>
 #include <cstdlib>
 #include <ctime>
@@ -13,9 +15,33 @@ Gene::~Gene() {
    delete geneInfo;
 }
 
+GeneInfo* Gene::getGenInfo() {
+    return geneInfo;
+}
+
+double Gene::getValue() {
+    return geneInfo->getDSSet()->getValue();
+}
+
+bool Gene::contains(int v) {
+    return geneInfo->getOwner()->getNOwner(v) > 0;
+}
+
+
+void Gene::copy(Gene* cell) {
+    geneInfo->copy(cell->getGenInfo());
+}
+
+void Gene::clearInfo() {
+        geneInfo->clearInfo();
+}
+
+void Gene::printInfo() {
+    geneInfo->printInfo();
+}
+
 // change to GRASP with initialize
 void Gene::construct(bool inMating, Gene* bestKnown) {
-    srand(time(NULL));   
     int pmin, pmax;
     double * p;
     int nL;
@@ -30,14 +56,14 @@ void Gene::construct(bool inMating, Gene* bestKnown) {
     Owner* owner = geneInfo->getOwner();
     nL = 0;
     for (int i = 0; i < n; i++) {
-        if (owner->getNOwner[i] == 0) {
+        if (owner->getNOwner(i) == 0) {
             L[nL] = i;
             nL++;
         }
     }
     
     // GRASP
-    while (owner->nCover < n) {
+    while (owner->getNCover() < n) {
         for (int i = 0; i < n; i++) {
             p[L[i]] = G->getWeight(L[i]) / owner->calTO(L[i]);
         } 
@@ -72,11 +98,11 @@ void Gene::construct(bool inMating, Gene* bestKnown) {
             printf("nRCL = %d\n", nRCL);
         #endif
         // choose vertex
-        int randID = rand() % nRCL;
+        int randID = Random::getRandInt(nRCL);
         int u = RCL[randID];
         //printf("chosen vertex = %d\n", u);
         if (inMating) {
-            if (set->value  + G->getWeight(u) >= bestKnown->getValue()) {
+            if (set->getValue()  + G->getWeight(u) >= bestKnown->getValue()) {
                 //return;
             }
         }
@@ -84,7 +110,7 @@ void Gene::construct(bool inMating, Gene* bestKnown) {
         // update L
         // remove candidate which are dependent or (it and its neighbors are covered)
         for (int i = nL - 1; i >= 0; i--) 
-            if (owner->nOwner[L[i]] > 0 || owner->calTO(L[i]) == 0) {
+            if (owner->getNOwner(L[i]) > 0 || owner->calTO(L[i]) == 0) {
                 L[i] = L[nL - 1];
                 nL --;
         }
@@ -96,7 +122,6 @@ void Gene::construct(bool inMating, Gene* bestKnown) {
 }
 
 void Gene::C_LS(TmpInfo* tmpInfo, Gene* CSlb, Gene* bestKnown) {
-    srand(time(NULL));
     // init
     CSlb->copy(this);
     tmpInfo->init(geneInfo);
@@ -108,8 +133,8 @@ void Gene::C_LS(TmpInfo* tmpInfo, Gene* CSlb, Gene* bestKnown) {
         #if INFO
             printf("iter = %d\n", iter);
         #endif
-        if (owner->nCover == n) {
-            if (set->value < CSlb->getValue()) {
+        if (owner->getNCover() == n) {
+            if (set->getValue() < CSlb->getValue()) {
                 CSlb->copy(this);
                 printf("CSlb value = %0.2f\n", CSlb->getValue());
                 iter = 0;
@@ -129,7 +154,7 @@ void Gene::C_LS(TmpInfo* tmpInfo, Gene* CSlb, Gene* bestKnown) {
         tmpInfo->clearTabu();
         //v : = a vertex in CS with the highest value sc ( v ) and v ∈
         // tabu_list, breaking ties in the oldest one;
-        while (owner->nCover < n) {
+        while (owner->getNCover() < n) {
             int maxc = tmpInfo->findNextVertexToADD(geneInfo);            
             if (maxc == -1) {
                 //no way to escape

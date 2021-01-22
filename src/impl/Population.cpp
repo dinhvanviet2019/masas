@@ -8,6 +8,8 @@
  * Limitation: only support for MTX
  * */
 #include "Population.h"
+#include "Random.h"
+#include <cstdio>
 #include <cstdlib>
 #include <ctime>
 
@@ -43,23 +45,22 @@ void Population::initPopulation() {
 }
 
 void Population::pdo(Gene* x, Gene* y, Gene* child) {
-    srand(time(NULL));
     child->clearInfo();
     GeneInfo* genInfoX = x->getGenInfo();
     GeneInfo* genInfoY = y->getGenInfo();
     GeneInfo* genInfo = child->getGenInfo();
     for (int i = 0; i < graph->getGraphSize(); i++) {
-        if (genInfoX->contains(i) && genInfoY->contains(i) && rand() % 100 < beta1) {
+        if (genInfoX->contains(i) && genInfoY->contains(i) && Random::getRandInt(100) < beta1) {
             genInfo->addMainVertex(i);
         } else {
             if (genInfoX->contains(i) || genInfoY->contains(i)) {
                 if (!genInfo->isCovered(i)) {
-                    if (rand() % 100 < (100 - beta1)) {
+                    if (Random::getRandInt(100) < (100 - beta1)) {
                         genInfo->addMainVertex(i);
                     }
                 }
             } else {
-                if (rand() % 100 < beta2) {
+                if (Random::getRandInt(100) < beta2) {
                     int* adjPtn = graph->getADJPnt(i);
                     for (int j = 0; j < graph->getADJListSize(i); j++) {
                         if (genInfo->contains(*adjPtn)) {
@@ -87,7 +88,7 @@ void Population::poolUpdate(Gene* nextGen) {
     if (pops[worstID]->getValue() > nextGen->getValue()) {
         pops[worstID]->copy(nextGen);
     } else {
-        if (rand() % 1000 < 500) {
+        if (Random::getUniform() <= 0.5 ) {
             pops[worstID]->copy(nextGen);
         }
     }
@@ -95,8 +96,8 @@ void Population::poolUpdate(Gene* nextGen) {
 
 void Population::run() {
     initPopulation();
-    int i = rand() % nGens;
-    int j = rand() % nGens;
+    int i = Random::getRandInt(nGens);
+    int j = Random::getRandInt(nGens);
     Gene* x = pops[i];
     Gene* y = pops[j];
     pdo(x, y, child);
@@ -108,8 +109,8 @@ void Population::run() {
         }
         poolUpdate(CSlb);
         if (CSlb->getValue() >= child->getValue()) {            
-            i = rand() % nGens;
-            j = rand() % nGens;
+            i = Random::getRandInt(nGens);
+            j = Random::getRandInt(nGens);
             x = pops[i];
             y = pops[j];
             pdo(x, y, child);
