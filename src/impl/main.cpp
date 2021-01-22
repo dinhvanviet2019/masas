@@ -7,6 +7,7 @@
 #include "GeneInfo.h"
 #include "TmpInfo.h"
 #include "Gene.h"
+#include "Population.h"
 
 int main() {
     printf("I Loves You, so you\n");
@@ -14,25 +15,22 @@ int main() {
     char filePath[MAX_LENS];
     strcpy(filePath, "/home/ubuntu/Databases/mwds/dimacs/brock200-2.mtx");
     Graph* graph = GraphFactory::createSmallGraph(filePath);
-    Gene* gene = new Gene(graph);
-    GeneInfo* genInfo = gene->getGenInfo();
+    Population* pops = new Population(graph);
+    Gene* x = new Gene(graph);
+    Gene* y = new Gene(graph);
+    Gene* child = new Gene(graph);
     TmpInfo* tmpInfo = new TmpInfo(graph);
-    DSSet * set = genInfo->getDSSet();
-    Owner* owner = genInfo->getOwner();
-    gene->construct(0, NULL);    
-    Gene* CSlb = new Gene(graph);
-    Gene* bestKnown = new Gene(graph);
-    CSlb->copy(gene);    
-    bestKnown->copy(gene);  
-    gene->C_LS(tmpInfo, CSlb, bestKnown);
-    printf("starting point!\n");
-    bestKnown->printInfo();
-    printf("Testing Result!\n");
-    CSlb->printInfo();
-    delete gene;
-    delete CSlb;
-    delete bestKnown;
+    x->construct(false, nullptr);
+    y->construct(false, nullptr);
+    printf("start o mating\n");
+    pops->pdo(y, y, child);
+    //x->printInfo();
+    //y->printInfo();
+    //child->printInfo();
     delete tmpInfo;
-    delete graph;
+    delete x;
+    delete y;
+    delete child;
+    delete pops;
     return 0;
 }

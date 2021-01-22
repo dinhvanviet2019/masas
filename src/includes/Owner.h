@@ -33,12 +33,15 @@ typedef struct Owner {
             nOwner[*adjPnt]++;            
             adjPnt++;
         }
-        bool checkmate =  nCover == testNCover();
+        bool checkmate = (nCover == testNCover());
+        printf("add main vertex checkmate = %d\n", checkmate);
     }
 
     void removeMainVertex(int u) {
+        printf("start to remove nCovers = %d\n", nCover);
         int* adjPnt = _G->getADJPnt(u);
         for (int i = 0; i < _G->getADJListSize(u); i++) {
+            printf("nOwner[%d] = %d\n", *adjPnt, nOwner[*adjPnt]);
             if (nOwner[*adjPnt] == 1) {
                 nCover --;
                 addToUV(*adjPnt);
@@ -46,13 +49,15 @@ typedef struct Owner {
             nOwner[*adjPnt]--;
             adjPnt++;
         }
-        bool checkmate =  nCover == testNCover();
+        printInfo();
+        bool checkmate =  (nCover == testNCover());
+        printf("remove main vertex checkmate = %d\n", checkmate);
     }
 
     int testNCover() {
         int res = 0;
         for (int i = 0; i < n; i++) {
-            res += nOwner[i] > 0;
+            res += (nOwner[i] > 0);
         }
         return res;
     }

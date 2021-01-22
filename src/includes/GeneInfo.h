@@ -33,7 +33,7 @@ public:
     void removeMainVertex(int u) {
         printf("Geneinfo: remove vertex %d\n", u);
         if (u < 0 || u >= n || !dsSet->set[u]) {
-            printf("Geneinfo: remove vertex %d completely\n", u);
+            printf("Geneinfo error: remove vertex %d completely\n", u);
             return;
         }
         dsSet->removeMainVertex(u);

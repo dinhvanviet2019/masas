@@ -23,10 +23,7 @@ Population::Population(Graph* graph) {
     CSlb = new Gene(graph);
 }
 
-Population::~Population() {
-    for (int i = 0; i < graph->getGraphSize(); i++) {
-        delete pops[i];
-    }
+Population::~Population() {    
     delete[] pops;
     delete tmpInfo;
     delete bestKnown;
@@ -46,7 +43,6 @@ void Population::initPopulation() {
 }
 
 void Population::pdo(Gene* x, Gene* y, Gene* child) {
-    initPopulation();
     srand(time(NULL));
     child->clearInfo();
     GeneInfo* genInfoX = x->getGenInfo();
@@ -76,6 +72,8 @@ void Population::pdo(Gene* x, Gene* y, Gene* child) {
             }
         }
     }
+    printf("start repair gene\n");
+    child->printInfo();
     child->construct(true, bestKnown);
 }
 
@@ -96,6 +94,7 @@ void Population::poolUpdate(Gene* nextGen) {
 }
 
 void Population::run() {
+    initPopulation();
     int i = rand() % nGens;
     int j = rand() % nGens;
     Gene* x = pops[i];

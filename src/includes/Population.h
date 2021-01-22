@@ -22,6 +22,7 @@ public:
     Gene* getBestKnownGene() {
         return bestKnown;
     }
+    void pdo(Gene* x, Gene* y, Gene* child);
 private:
     const int nGens = 12;
     const int beta1 = 80;
@@ -29,7 +30,6 @@ private:
     const int maxIters = 1000;
 
     void initPopulation();
-    void pdo(Gene* x, Gene* y, Gene* child);
     void poolUpdate(Gene * nextGen);
 
     Graph* graph;

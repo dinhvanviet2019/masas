@@ -49,6 +49,8 @@ void Gene::construct(bool inMating, Gene* bestKnown) {
             }
         }
         // max p
+        printf("nCover = %d\n", owner->nCover);
+        printf("nL = %d\n", nL);
         pmax = L[0];
         for (int i = 0; i < nL; i++) {
             if (p[pmax] < p[L[i]]) {
@@ -56,30 +58,30 @@ void Gene::construct(bool inMating, Gene* bestKnown) {
             }
         }
         double threshhold = p[pmin] + alpha * (p[pmax] - p[pmin]); // calculate threshold for RCL
-        //printf("threshold %0.2f \n", threshhold);
-        // create RCL
+        printf("threshold %0.2f \n", threshhold);
+        // create RCL        
         nRCL = 0;
         for (int i = 0; i < nL; i++) {
             if (p[L[i]] <= threshhold) {
                 RCL[nRCL] = L[i];
                 nRCL++;
             }
-        }
-        //printf("nRCL = %d\n", nRCL);
+        }        
+        printf("nRCL = %d\n", nRCL);
         // choose vertex
         int randID = rand() % nRCL;
         int u = RCL[randID];
         //printf("chosen vertex = %d\n", u);
         if (inMating) {
             if (set->value  + G->getWeight(u) >= bestKnown->getValue()) {
-                return;
+                //return;
             }
         }
         geneInfo->addMainVertex(u);
         // update L
         // remove candidate which are dependent or (it and its neighbors are covered)
         for (int i = nL - 1; i >= 0; i--) 
-            if (owner->nOwner[L[i]] == 0 || owner->calTO(L[i]) == 0) {
+            if (owner->nOwner[L[i]] > 0 || owner->calTO(L[i]) == 0) {
                 L[i] = L[nL - 1];
                 nL --;
         }

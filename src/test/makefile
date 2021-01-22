@@ -1,0 +1,31 @@
+CC := g++
+SRC_DIR := ../impl
+INC_DIR := ../includes
+OBJ_DIR := ../build
+BIN_DIR := ../build
+
+SRCS := $(SRC_DIR)/Graph.cpp $(SRC_DIR)/SmallGraph.cpp $(SRC_DIR)/MassiveGraph.cpp $(SRC_DIR)/GraphFactory.cpp $(SRC_DIR)/Gene.cpp $(SRC_DIR)/Population.cpp main_test.cpp
+BINS := $(BIN_DIR)/main_test
+
+.PHONY: build compile clean test
+
+all: build compile
+build:
+	mkdir -p ${OBJ_DIR}
+	mkdir -p ${BIN_DIR}
+
+compile: $(BINS)
+test: $(BINS)
+	reset
+	$^
+
+
+$(BINS): $(SRCS)
+	$(CC) -o $@ $^ -I $(INC_DIR)
+
+clean:
+	rm -rf ${OBJ_DIR}
+	rm -rf ${BIN_DIR}
+
+
+
