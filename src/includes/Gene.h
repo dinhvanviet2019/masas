@@ -23,6 +23,7 @@ public:
     void copy(Gene* cell);    
     GeneInfo* getGenInfo();    
     double getValue();
+    bool isCellLevel();
     bool contains(int v);
     void clearInfo();
     void printInfo();

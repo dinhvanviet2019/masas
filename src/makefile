@@ -1,5 +1,5 @@
 CC := g++
-LDFLASG := -DINFO
+LDFLASG := -DINFO -DEBUG1
 SRC_DIR := ./impl
 INC_DIR := ./includes
 OBJ_DIR := ./build
@@ -28,6 +28,3 @@ $(BINS): $(SRCS)
 clean:
 	rm -rf ${OBJ_DIR}
 	rm -rf ${BIN_DIR}
-
-
-

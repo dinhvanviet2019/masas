@@ -23,6 +23,11 @@ double Gene::getValue() {
     return geneInfo->getDSSet()->getValue();
 }
 
+bool Gene::isCellLevel() {
+    //printf("");
+    return (geneInfo->getOwner()->getNCover() == n);
+}
+
 bool Gene::contains(int v) {
     return geneInfo->getOwner()->getNOwner(v) > 0;
 }
@@ -48,9 +53,9 @@ void Gene::construct(bool inMating, Gene* bestKnown) {
     int * L;
     int nRCL;
     int * RCL;
-    p = new double[n];
-    RCL = new int[n];
-    L = new int[n];    
+    p = new double[n]; 
+    RCL = new int[n]; 
+    L = new int[n];  
     // initialize    
     DSSet* set = geneInfo->getDSSet();
     Owner* owner = geneInfo->getOwner();
@@ -63,8 +68,8 @@ void Gene::construct(bool inMating, Gene* bestKnown) {
     }
     
     // GRASP
-    while (owner->getNCover() < n) {
-        for (int i = 0; i < n; i++) {
+    while (owner->getNCover() < n && nL != 0) {    
+        for (int i = 0; i < nL; i++) {
             p[L[i]] = G->getWeight(L[i]) / owner->calTO(L[i]);
         } 
         // min p
@@ -75,7 +80,7 @@ void Gene::construct(bool inMating, Gene* bestKnown) {
             }
         }
         // max p
-        #if DEBUG2
+        #if DEBUG1
             printf("nCover = %d\n", owner->getNCover());
             printf("nL = %d\n", nL);
         #endif
@@ -94,7 +99,7 @@ void Gene::construct(bool inMating, Gene* bestKnown) {
                 nRCL++;
             }
         }
-        #if DEBUG2
+        #if DEBUG1
             printf("nRCL = %d\n", nRCL);
         #endif
         // choose vertex
@@ -102,17 +107,21 @@ void Gene::construct(bool inMating, Gene* bestKnown) {
         int u = RCL[randID];
         //printf("chosen vertex = %d\n", u);
         if (inMating) {
-            if (set->getValue()  + G->getWeight(u) >= bestKnown->getValue()) {
-                //return;
+            if (set->getValue() + G->getWeight(u) >= bestKnown->getValue()) {
+                #if INFO
+                    printf("INFO: warning - Good Luck for next time!\n");
+                #endif
+                return;
             }
         }
         geneInfo->addMainVertex(u);
         // update L
         // remove candidate which are dependent or (it and its neighbors are covered)
-        for (int i = nL - 1; i >= 0; i--) 
+        for (int i = nL - 1; i >= 0; i--) {
             if (owner->getNOwner(L[i]) > 0 || owner->calTO(L[i]) == 0) {
                 L[i] = L[nL - 1];
                 nL --;
+            }
         }
         //printf("nL = %d\n", nL);
     }
@@ -131,6 +140,7 @@ void Gene::C_LS(TmpInfo* tmpInfo, Gene* CSlb, Gene* bestKnown) {
     while (iter < noimpro_iter) {
         #if INFO
             printf("iter = %d\n", iter);
+            printf("CSlb value = %0.2f\n", CSlb->getValue());
         #endif
         if (owner->getNCover() == n) {
             if (set->getValue() < CSlb->getValue()) {
@@ -159,9 +169,11 @@ void Gene::C_LS(TmpInfo* tmpInfo, Gene* CSlb, Gene* bestKnown) {
                 //no way to escape
                 return;
             }
+            
             if (set->getValue() + G->getWeight(maxc) >= bestKnown->getValue()) {
-                break;
+                return;
             }
+            
             geneInfo->addMainVertex(maxc);
             tmpInfo->updateConfWhenAddMainVertex(maxc);
             tmpInfo->addToTabuList(maxc);

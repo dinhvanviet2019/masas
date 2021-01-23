@@ -38,6 +38,9 @@ void Population::initPopulation() {
     for (int i = 0; i < nGens; i++) {        
         pops[i]->construct(false, bestKnown);
         pops[i]->C_LS(tmpInfo, CSlb, bestKnown);
+        if (CSlb->isCellLevel() && CSlb->getValue() < pops[i]->getValue()) {
+            pops[i]->copy(CSlb);
+        }
         if (pops[i]->getValue() < bestKnown->getValue()) {
             bestKnown->copy(pops[i]);
         }
@@ -63,8 +66,9 @@ void Population::pdo(Gene* x, Gene* y, Gene* child) {
                 if (Random::getRandInt(100) < beta2) {
                     int* adjPtn = graph->getADJPnt(i);
                     for (int j = 0; j < graph->getADJListSize(i); j++) {
-                        if (genInfo->contains(*adjPtn)) {
-                            genInfo->removeMainVertex(*adjPtn);
+                        int v = *adjPtn;
+                        if (genInfo->contains(v)) {
+                            genInfo->removeMainVertex(v);
                         }
                         adjPtn++;
                     }

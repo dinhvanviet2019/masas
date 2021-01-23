@@ -42,7 +42,7 @@ void Owner::addMainVertex(int u) {
         adjPnt++;
     }
     #if DEBUG1
-        printf("[DEBUG LEVEL 1] Add Vertex To Owner\n");
+        printf("[DEBUG LEVEL 2] Add Vertex To Owner\n");
         printf("add vertex %d\n", u);
         printf("nCover = %d\nChecked nCover = %d\n", nCover, testNCover());    
     #endif
@@ -58,8 +58,8 @@ void Owner::removeMainVertex(int u) {
         nOwner[*adjPnt]--;
         adjPnt++;
     }
-    #if DEBUG1
-        printf("[DEBUG LEVEL 1] Remove Vertex To Owner\n");
+    #if DEBUG2
+        printf("[DEBUG LEVEL 2] Remove Vertex To Owner\n");
         printf("remove vertex %d\n", u);
         printf("nCover = %d\nChecked nCover = %d\n", nCover, testNCover());    
     #endif
@@ -122,7 +122,7 @@ void Owner::printInfo() {
         printf("nOwner[%d] = %d, ", i, nOwner[i]);
     }
     printf("\n");
-    #if DEBUG1
+    #if DEBUG2
         printf("UV: ");
         for (int i = 0; i < numUVs; i++) {
             printf("UV[%d] = %d, ", i, uVers[i]);

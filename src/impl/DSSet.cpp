@@ -50,8 +50,8 @@ void DSSet::printInfo() {
         }
     }
     printf("\n");
-    #if DEBUG1
-    printf("[DEBUG LEVEL 1] Set Information:")
+    #if DEBUG2
+    printf("[DEBUG LEVEL 2] Set Information:")
     for (int i = 0; i < n; i++) {        
         printf("%d ", set[i]);
     } 

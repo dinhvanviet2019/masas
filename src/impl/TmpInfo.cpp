@@ -54,7 +54,7 @@ int TmpInfo::findNextVertexToADD(GeneInfo* geneInfo){
     Owner* owner = geneInfo->getOwner();
     clearL();
     for (int u = 0; u < n; u++) {
-        #if DEBUG1 || DEBUG2        
+        #if DEBUG2       
             printf("DEBUG2: potential candidates\n");
             if (owner->getNOwner(u) == 0) {
                 printf("potential candidate: %d, conf[%d] = %d\n", u, u, conf[u]);
@@ -78,7 +78,7 @@ int TmpInfo::findNextVertexToADD(GeneInfo* geneInfo){
     if (nL == 0) {
         return -1;
     }
-    #if DEBUG1 || DEBUG2
+    #if DEBUG1
         printf("nL = %d\n", nL);
     #endif
     int v = L[Random::getRandInt(nL)];
@@ -94,7 +94,7 @@ int TmpInfo::findNextVertexToRemove(DSSet* set) {
     #endif
     clearL();
     for (int u = 0; u < n; u++) {
-        #if DEBUG1 || DEBUG2        
+        #if DEBUG2        
             printf("DEBUG2: potential candidates\n");
             if (owner->getNOwner(u) == 0) {
                 printf("potential candidate: %d, conf[%d] = %d\n", u, u, conf[u]);
@@ -115,7 +115,7 @@ int TmpInfo::findNextVertexToRemove(DSSet* set) {
             }
         }
     }
-    #if DEBUG1 || DEBUG2
+    #if DEBUG1
         printf("nL = %d\n", nL);
     #endif
     int v = L[Random::getRandInt(nL)];
@@ -246,7 +246,7 @@ void TmpInfo::printInfo() {
     }
     printf("\n");
 
-    #if DEBUG1 || DEBUG2
+    #if DEBUG1
         printf("Tabu List\n");
         for (int i = 0; i < n; i++) {
             printf("tabulist[%d] = %d ", i, tabulist[i]);
