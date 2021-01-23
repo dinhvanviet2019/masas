@@ -29,7 +29,7 @@ private:
     const int nGens = 12;
     const int beta1 = 80;
     const int beta2 = 5;
-    const int maxIters = 1000;
+    const int maxIters = 3;
 
 
     Graph* graph;

@@ -12,6 +12,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <ctime>
+#include <cmath>
 
 Population::Population(Graph* graph) {
     this->graph = graph;    
@@ -78,7 +79,9 @@ void Population::pdo(Gene* x, Gene* y, Gene* child) {
             }
         }
     }
-    printf("start repair gene\n");
+    #if INFO
+        printf("start repair gene\n");
+    #endif
     //child->printInfo();
     child->construct(true, bestKnown);
 }
@@ -108,12 +111,13 @@ void Population::run() {
     pdo(x, y, child);
     int iter = 0;
     while (iter < maxIters) {
+        double min_value_ofXY = fmin(x->getValue(), y->getValue());
         child->C_LS(tmpInfo, CSlb, bestKnown);
         if (CSlb->getValue() < bestKnown->getValue()) {
             bestKnown->copy(CSlb);
         }
         poolUpdate(CSlb);
-        if (CSlb->getValue() >= child->getValue()) {            
+        if (CSlb->getValue() >= min_value_ofXY) {
             i = Random::getRandInt(nGens);
             j = Random::getRandInt(nGens);
             x = pops[i];

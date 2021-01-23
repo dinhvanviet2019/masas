@@ -20,6 +20,7 @@ int main() {
     Graph* graph = GraphFactory::createSmallGraph(filePath);
     Population* pops = new Population(graph);  
     pops->initPopulation();
+    pops->run();
     pops->printInfo();
     pops->printBestKnownGen();       
     delete pops;
