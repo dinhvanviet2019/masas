@@ -1,4 +1,6 @@
 # masas
+## decription:
+Implementation: Improved Memetic Algorithm for Solving the Minimum Weight Vertex Independent Dominating Set (MSSAS)
 
 ## requirements:
 1. g++
