@@ -90,13 +90,23 @@ void Owner::addToUV(int u) {
 }
 
 void Owner::removeFromUV(int u) {
-    if (pos[u] >= 0) {
-        int posID = pos[u];
-        int lastInstance = uVers[numUVs - 1];
-        uVers[posID] = lastInstance;
-        pos[lastInstance] = posID;
-        pos[u] = -1;
-        numUVs--;
+    if (numUVs > 0) {
+        if (pos[u] >= 0) {
+            int posID = pos[u];
+            int lastInstance = uVers[numUVs - 1];
+            uVers[posID] = lastInstance;
+            pos[lastInstance] = posID;
+            pos[u] = -1;
+            numUVs--;
+        } else {
+            #if INFO
+                printf("vertex %d is not in  UVs\n", u);
+            #endif
+        }
+    } else {
+        #if INFO
+            printf("empty uncovered vertex list\n");
+        #endif
     }
 }
 

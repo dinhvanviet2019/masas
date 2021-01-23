@@ -1,5 +1,6 @@
 CC := g++
-LDFLASG := -DINFO -DEBUG1
+CCFLAGS := -g
+LDFLASG := 
 SRC_DIR := ./impl
 INC_DIR := ./includes
 OBJ_DIR := ./build
@@ -17,13 +18,15 @@ build:
 	mkdir -p ${BIN_DIR}
 
 compile: $(BINS)
-test: $(BINS)
-	reset
+run: $(BINS)
 	$^
+debug: $(BINS)
+	reset
+	gdb $^
 
 
 $(BINS): $(SRCS)
-	$(CC) -o $@ $^ -I $(INC_DIR) $(LDFLASG)
+	$(CC) -o $@ $^ -I $(INC_DIR) $(CCFLAGS) $(LDFLASG)
 
 clean:
 	rm -rf ${OBJ_DIR}

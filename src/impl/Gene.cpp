@@ -140,6 +140,7 @@ void Gene::C_LS(TmpInfo* tmpInfo, Gene* CSlb, Gene* bestKnown) {
     while (iter < noimpro_iter) {
         #if INFO
             printf("iter = %d\n", iter);
+            printf("Current Value = %0.2f and Current NCover = %d\n", set->getValue(), owner->getNCover());
             printf("CSlb value = %0.2f\n", CSlb->getValue());
         #endif
         if (owner->getNCover() == n) {
@@ -167,11 +168,11 @@ void Gene::C_LS(TmpInfo* tmpInfo, Gene* CSlb, Gene* bestKnown) {
             int maxc = tmpInfo->findNextVertexToADD(geneInfo);            
             if (maxc == -1) {
                 //no way to escape
-                return;
+                break;
             }
             
             if (set->getValue() + G->getWeight(maxc) >= bestKnown->getValue()) {
-                return;
+                break;
             }
             
             geneInfo->addMainVertex(maxc);

@@ -23,6 +23,7 @@ Population::Population(Graph* graph) {
     bestKnown = new Gene(graph);
     child = new Gene(graph);
     CSlb = new Gene(graph);
+    tmpGen = new Gene(graph);
 }
 
 Population::~Population() {    
@@ -31,16 +32,16 @@ Population::~Population() {
     delete bestKnown;
     delete child;
     delete CSlb;
+    delete tmpGen;
 }
 
 void Population::initPopulation() {  
     bestKnown->construct(false, nullptr);
-    for (int i = 0; i < nGens; i++) {        
-        pops[i]->construct(false, bestKnown);
-        pops[i]->C_LS(tmpInfo, CSlb, bestKnown);
-        if (CSlb->isCellLevel() && CSlb->getValue() < pops[i]->getValue()) {
-            pops[i]->copy(CSlb);
-        }
+    for (int i = 0; i < nGens; i++) {
+        tmpGen->clearInfo();        
+        tmpGen->construct(false, bestKnown);
+        tmpGen->C_LS(tmpInfo, CSlb, bestKnown);
+        pops[i]->copy(CSlb);        
         if (pops[i]->getValue() < bestKnown->getValue()) {
             bestKnown->copy(pops[i]);
         }
@@ -123,4 +124,20 @@ void Population::run() {
         }
         iter++;           
     }     
+}
+
+Gene* Population::getBestKnownGene() {
+    return bestKnown;
+}
+
+void Population::printInfo() {
+    for (int i = 0; i < nGens; i++) {
+        printf("Gen %d Info\n", i);
+        pops[i]->printInfo();
+    }
+}
+
+void Population::printBestKnownGen() {
+    printf("Best Known Gen\n");
+    bestKnown->printInfo();
 }
