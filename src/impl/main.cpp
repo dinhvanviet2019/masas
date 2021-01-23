@@ -8,29 +8,22 @@
 #include "TmpInfo.h"
 #include "Gene.h"
 #include "Population.h"
+#include "Random.h"
 
-int main() {
+int main() {    
     printf("I Loves You, so you\n");
+    printf("true = %d, false = %d\n", true, false);
+    
     const int MAX_LENS = 1024;
     char filePath[MAX_LENS];
     strcpy(filePath, "/home/ubuntu/Databases/mwds/dimacs/brock200-2.mtx");
     Graph* graph = GraphFactory::createSmallGraph(filePath);
-    Population* pops = new Population(graph);
-    Gene* x = new Gene(graph);
-    Gene* y = new Gene(graph);
-    Gene* child = new Gene(graph);
-    TmpInfo* tmpInfo = new TmpInfo(graph);
-    x->construct(false, nullptr);
-    y->construct(false, nullptr);
-    printf("start o mating\n");
-    pops->pdo(y, y, child);
-    //x->printInfo();
-    //y->printInfo();
-    //child->printInfo();
-    delete tmpInfo;
-    delete x;
-    delete y;
-    delete child;
+    Population* pops = new Population(graph);  
+    pops->initPopulation();
+    pops->run();
+    pops->printInfo();
+    pops->printBestKnownGen();       
     delete pops;
-    return 0;
+    delete graph;
+   return 0;
 }

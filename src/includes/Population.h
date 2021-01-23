@@ -17,24 +17,25 @@
 class Population {
 public:
     Population(Graph* graph);
-    ~Population();
+    ~Population();    
     void run();
-    Gene* getBestKnownGene() {
-        return bestKnown;
-    }
+    Gene* getBestKnownGene();
     void pdo(Gene* x, Gene* y, Gene* child);
+    void printInfo();
+    void printBestKnownGen();
+    void initPopulation();
+    void poolUpdate(Gene * nextGen);
 private:
     const int nGens = 12;
     const int beta1 = 80;
     const int beta2 = 5;
-    const int maxIters = 1000;
+    const int maxIters = 3;
 
-    void initPopulation();
-    void poolUpdate(Gene * nextGen);
 
     Graph* graph;
     Gene ** pops;
     TmpInfo * tmpInfo;
+    Gene* tmpGen;
     Gene* bestKnown;
     Gene* CSlb;
     Gene* child;  

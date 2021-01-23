@@ -1,7 +1,8 @@
-sudo apt remove --purge g++ g++-multilib build-essential build-essential gcc -y
-sudo apt purge g++ -y
-sudo apt install g++ g++-multilib --reinstall -y
-sudo apt-get install build-essential build-essential --reinstall -y
-sudo apt-get install --reinstall -y
-sudo apt install gcc --reinstall -y
-
+# !/bin/sh
+echo package list
+sudo dpkg --get-selections | cut -f1 | grep 'libc\|g++\|build-essential'
+echo start to reinstall all C and CPP packages
+for package in $(sudo dpkg --get-selections | cut -f1 | grep 'gcc\|libc\|g++\|build-essential')
+do
+    sudo apt-get install --reinstall -y $package
+done
